@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import product
+from .models import products
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -9,8 +9,8 @@ from django import forms
 
 
 def home(request):
-    products = product.objects.all()
-    return render(request, 'home.html', {'products': products })
+    all_products = products.objects.all()
+    return render(request, 'home.html', {'products': all_products })
 
 def about(request):
     return render(request, 'about.html', {})
@@ -55,3 +55,7 @@ def register_user(request):
             return redirect('register')
     else:
         return render(request, 'register.html', {'form':form})
+    
+def product(request, pk):
+    product = products.objects.get(id=pk)
+    return render(request, 'product.html', {'product':product})
