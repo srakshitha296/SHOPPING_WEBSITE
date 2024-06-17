@@ -1,15 +1,21 @@
 from django.db import models
 import datetime
 
-class categories(models.Model):
+class Brand(models.Model):
     name = models.CharField(max_length=50)
+
+    def _str_(self):
+        return self.name
+    
+class Category(models.Model):
+    name = models.CharField(max_length=50)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, default=1)
 
     def _str_(self):
         return self.name
 
 
-
-class customers(models.Model):
+class Customer(models.Model):
     first_name = models.CharField(max_length=50)
     last_name =models.CharField(max_length=50)
     phone = models.CharField(max_length=10)
@@ -20,10 +26,10 @@ class customers(models.Model):
         return f'{self.first_name} {self.last_name}'
 
 
-class products(models.Model):
+class Product(models.Model):
     name = models.CharField(max_length=50)
     price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
-    category = models.ForeignKey(categories, on_delete=models.CASCADE, default=1)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
     description = models.CharField(max_length=300, default='', blank=True, null=True)
     image = models.ImageField(upload_to='uploads/product/')
     
@@ -35,11 +41,9 @@ class products(models.Model):
         return self.name
 
 
-
-
-class orders(models.Model):
-    product = models.ForeignKey(products, on_delete=models.CASCADE)
-    customer = models.ForeignKey(customers, on_delete=models.CASCADE)
+class Order(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
     address = models.CharField(max_length=100, default='',)
     phone = models.CharField(max_length=10, default='',blank=True)
