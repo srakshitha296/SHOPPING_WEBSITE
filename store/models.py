@@ -4,14 +4,13 @@ import datetime
 class Brand(models.Model):
     name = models.CharField(max_length=50)
 
-    def _str_(self):
+    def __str__(self):
         return self.name
     
 class Category(models.Model):
     name = models.CharField(max_length=50)
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, default=1)
 
-    def _str_(self):
+    def __str__(self):
         return self.name
 
 
@@ -22,13 +21,14 @@ class Customer(models.Model):
     emaild = models.EmailField(max_length=50)
     password = models.CharField(max_length=50)
 
-    def _str_(self):
+    def __str__(self):
         return f'{self.first_name} {self.last_name}'
 
 
 class Product(models.Model):
     name = models.CharField(max_length=50)
     price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, default=1)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
     description = models.CharField(max_length=300, default='', blank=True, null=True)
     image = models.ImageField(upload_to='uploads/product/')
@@ -37,7 +37,7 @@ class Product(models.Model):
     if_sale = models.BooleanField(default=False)
     sale_price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
 
-    def _str_(self):
+    def __str__(self):
         return self.name
 
 
@@ -50,6 +50,6 @@ class Order(models.Model):
     date = models.DateField(default=datetime.datetime.today)
     status = models.BooleanField(default=False)
 
-    def _str_(self):
+    def __str__(self):
         return self.product
 
