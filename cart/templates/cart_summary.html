@@ -24,8 +24,7 @@
                     <div class="card-body">
                         <h5 class="card-title text-center">{{product.name}}</h5>
                         <p class="card-text text-center">{{ product.description}}</p>
-    
-                        {% if product.if_sale %}
+                            {% if product.if_sale %}
                         <!-- Sale -->
                         <div class="d-flex justify-content-center small-text-warning mb-2">
                             <div class="bi-star-fill"></div>
@@ -34,6 +33,7 @@
                         </div>
     
                         <!-- Product price-->
+                         <center>
                         <strike>${{ product.price }}</strike>
                         &nbsp;
                         <!-- Sale price-->
@@ -41,6 +41,7 @@
                         {% else %}
                         ${{ product.price }}
                         {% endif %}
+                        </center>
                         <br><br>
                         <div class="row justify-content-center">
                             <div class="col-md-2 ">Quantity : </div>
@@ -59,10 +60,13 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="py-4">
                         <center>
                         <a href="{% url 'home' %}" class="btn btn-secondary ">Home</a>
                         <button type="button" data-index="{{product.id}}" class="btn btn-secondary update-cart">Update</button>
+                        <button type="button" data-index="{{product.id}}" class="btn btn-danger delete-product">Remove</button>
                         </center>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -77,7 +81,7 @@
 
 
 <script>
-    // Check if button pressed
+    // Update cart
     $(document).on('click', '.update-cart', function (e) {
         e.preventDefault();
         var productid = $(this).data('index');
@@ -100,6 +104,29 @@
             }
         });
     })
+
+    //delete item from cart
+    $(document).on('click', '.delete-product', function (e) {
+            e.preventDefault();
+            // var productid = $(this).data('index');
+            $.ajax({
+                type: 'POST',
+                url: '{% url "cart_delete" %}',
+                data: {
+                    product_id: $(this).data('index'),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    action: 'post'
+                },
+
+                success: function (json) {
+                    // console.log(json)
+                    // document.getElementById("cart_quantity").textContent = json.qty
+                    location.reload();
+                },
+                error: function (xhr, errmsg, err) {
+                }
+            });
+        })
 </script>
 
 {% endblock %}
