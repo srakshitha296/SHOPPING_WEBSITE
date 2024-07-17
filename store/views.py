@@ -64,3 +64,7 @@ def category(request, foo):
     category = Category.objects.get(name=foo)
     products = Product.objects.filter(category=category)
     return render(request, 'category.html', {'category':category, 'products':products})
+
+def category_summary(request):
+    categories = Category.objects.all()
+    return render(request, 'category_summary.html', {'categories':categories})
